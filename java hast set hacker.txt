@@ -1,0 +1,48 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        int t = s.nextInt();
+        
+        // Use a Set to store unique pairs of strings
+        Set<String> pairs = new HashSet<String>();
+        
+        for (int i = 0; i < t; i++) {
+            String first = s.next();
+            String second = s.next();
+            
+            // Combine both strings with a delimiter (e.g., a space or special character)
+            // to treat the pair as a single unique key.
+            pairs.add(first + " " + second);
+            
+            // Print the number of unique pairs currently in the set
+            System.out.println(pairs.size());
+        }
+        
+        s.close();
+    }
+}
+
+OUTPUT:
+
+Input (stdin)
+5
+john tom
+john mary
+john tom
+mary anna
+mary anna
+Your Output (stdout)
+1
+2
+2
+3
+3
+Expected Output
+1
+2
+2
+3
+3
