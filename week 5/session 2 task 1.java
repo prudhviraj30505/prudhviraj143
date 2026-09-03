@@ -1,0 +1,100 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    /*
+     * Complete the 'maxSubarray' function below.
+     *
+     * The function is expected to return an INTEGER_ARRAY.
+     * The function accepts INTEGER_ARRAY arr as parameter.
+     */
+
+    public static List<Integer> maxSubarray(List<Integer> arr) {
+        int n = arr.size();
+
+        // Kadane's algorithm for contiguous sum
+        int maxContiguous = arr.get(0);
+        int currentMax = arr.get(0);
+        for (int i = 1; i < n; i++) {
+            currentMax = Math.max(arr.get(i), currentMax + arr.get(i));
+            maxContiguous = Math.max(maxContiguous, currentMax);
+        }
+
+        // Non-contiguous sum: sum of positives, or max element if all negative
+        int maxElement = arr.get(0);
+        int nonContiguous = 0;
+        boolean hasPositive = false;
+        for (int num : arr) {
+            if (num > 0) {
+                nonContiguous += num;
+                hasPositive = true;
+            }
+            maxElement = Math.max(maxElement, num);
+        }
+        if (!hasPositive) {
+            nonContiguous = maxElement;
+        }
+
+        return Arrays.asList(maxContiguous, nonContiguous);
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
+
+        IntStream.range(0, t).forEach(tItr -> {
+            try {
+                int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+                List<Integer> arr = Stream.of(bufferedReader.readLine().trim().split(" "))
+                    .map(Integer::parseInt)
+                    .collect(toList());
+
+                List<Integer> result = Result.maxSubarray(arr);
+
+                bufferedWriter.write(
+                    result.stream()
+                        .map(Object::toString)
+                        .collect(joining(" "))
+                    + "\n"
+                );
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
+
+OUTPUT:
+Input (stdin)
+6
+1
+1
+6
+-1 -2 -3 -4 -5 -6
+2
+1 -2
+3
+1 2 3
+1
+-10
+6
+1 -1 -1 -1 -1 5
+Expected Output
+1 1
+-1 -1
+1 1
+6 6
+-10 -10
+5 6
